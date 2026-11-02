@@ -81,10 +81,12 @@ app.get('/admin', (req, res) => {
     });
 });
 
-app.post('/admin/bind', (req, res) => {
+app.post('/admin/create-card', (req, res) => {
     if (!req.session.user || req.session.user.role !== 'admin') return res.redirect('/login');
     const { cardId, userId } = req.body;
-    db.run("UPDATE cards SET user_id = ? WHERE id = ?", [userId || null, cardId], () => {
+    const finalUserId = userId === "" ? null : userId;
+    
+    db.run("INSERT INTO cards (id, user_id) VALUES (?, ?)", [cardId, finalUserId], (err) => {
         res.redirect('/admin');
     });
 });
