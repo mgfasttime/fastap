@@ -17,7 +17,22 @@ app.get('/go/:cardId', (req, res) => {
         }
     });
 });
+app.get('/register', (req, res) => res.render('register', { error: null }));
 
+app.post('/register', (req, res) => {
+    const { name, login, password } = req.body;
+    db.get("SELECT * FROM users WHERE login = ?", [login], (err, user) => {
+        if (user) {
+            return res.render('register', { error: 'Такой логин уже занят' });
+        }
+        db.run("INSERT INTO users (name, login, password, role) VALUES (?, ?, ?, 'client')", [name, login, password], (err) => {
+            if (err) {
+                return res.render('register', { error: 'Ошибка базы данных' });
+            }
+            res.redirect('/login');
+        });
+    });
+});
 app.get('/login', (req, res) => res.render('login', { error: null }));
 
 app.post('/login', (req, res) => {
