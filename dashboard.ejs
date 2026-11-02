@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои карты - FastTap</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .header h2 { margin: 0; font-size: 20px; }
+        .logout { color: #dc3545; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .card h3 { margin-top: 0; font-size: 18px; color: #007bff; }
+        input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; font-size: 16px; }
+        button { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #218838; }
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; text-align: center; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .empty { text-align: center; color: #777; padding: 30px; background: white; border-radius: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Привет, <%= user.name %>! 👋</h2>
+            <a href="/login" class="logout">Выйти</a>
+        </div>
+
+        <% if (success) { %><div class="alert success"><%= success %></div><% } %>
+        <% if (error) { %><div class="alert error"><%= error %></div><% } %>
+
+        <h3>Ваши карты:</h3>
+        
+        <% if (cards.length === 0) { %>
+            <div class="empty">У вас пока нет привязанных карт. Обратитесь к администратору.</div>
+        <% } %>
+
+        <% cards.forEach(card => { %>
+            <div class="card">
+                <h3>Карта: <%= card.id %></h3>
+                <form method="POST" action="/update-card">
+                    <input type="hidden" name="cardId" value="<%= card.id %>">
+                    <input type="text" name="targetUrl" value="<%= card.target_url %>" placeholder="Вставьте ссылку на Яндекс.Карты или 2ГИС" required>
+                    <button type="submit">Сохранить ссылку</button>
+                </form>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>
