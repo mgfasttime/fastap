@@ -17,19 +17,22 @@ app.get('/go/:cardId', (req, res) => {
         }
     });
 });
+// --- РЕГИСТРАЦИЯ НОВЫХ ЗАВЕДЕНИЙ ---
 app.get('/register', (req, res) => res.render('register', { error: null }));
 
 app.post('/register', (req, res) => {
     const { name, login, password } = req.body;
+    // Проверяем, не занят ли логин
     db.get("SELECT * FROM users WHERE login = ?", [login], (err, user) => {
         if (user) {
             return res.render('register', { error: 'Такой логин уже занят' });
         }
+        // Если свободен — создаем нового пользователя
         db.run("INSERT INTO users (name, login, password, role) VALUES (?, ?, ?, 'client')", [name, login, password], (err) => {
             if (err) {
                 return res.render('register', { error: 'Ошибка базы данных' });
             }
-            res.redirect('/login');
+            res.redirect('/login'); // После успеха кидаем на страницу входа
         });
     });
 });
