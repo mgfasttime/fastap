@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><title>Админка</title><style>body{font-family:sans-serif;background:#f4f4f9;padding:20px;} table{width:100%;border-collapse:collapse;background:white;margin-bottom:20px;} th,td{padding:10px;border:1px solid #ddd;text-align:left;} th{background:#eee;} .box{background:white;padding:20px;border-radius:10px;margin-bottom:20px;}</style></head>
+<body>
+    <div style="max-width:1000px;margin:0 auto;">
+        <h2>Панель Супер-Админа</h2>
+        <p><a href="/login">Выйти</a></p>
+        <div class="box">
+            <h3>Создать новую карту</h3>
+            <form method="POST" action="/admin/create-card">
+                <input type="text" name="cardId" placeholder="ID карты (например, CARD_021)" required>
+               <select name="userId">
+    <option value="">Без привязки</option>
+    <% clients.forEach(client => { %>
+        <option value="<%= client.id %>"><%= client.name %></option>
+    <% }) %>
+</select>
+                <button type="submit">Создать</button>
+            </form>
+        </div>
+        <div class="box">
+            <h3>Все карты в системе</h3>
+            <table>
+                <tr><th>ID Карты</th><th>Владелец (Заведение)</th><th>Ссылка (Редирект)</th></tr>
+                <% cards.forEach(c => { %>
+                    <tr>
+                        <td><strong><%= c.card_id %></strong></td>
+                        <td><%= c.user_name || 'Не привязана' %></td>
+                        <td><%= c.target_url || '-' %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

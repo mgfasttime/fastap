@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><title>Мои карты</title><style>body{font-family:sans-serif;background:#f4f4f9;padding:20px;} .card{background:white;padding:20px;margin-bottom:20px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);} input[type="text"]{width:70%;padding:10px;margin-right:10px;border:1px solid #ccc;border-radius:5px;} button{padding:10px;background:#28a745;color:white;border:none;border-radius:5px;cursor:pointer;}</style></head>
+<body>
+    <div style="max-width:800px;margin:0 auto;">
+        <h2>Привет, <%= user.name %>!</h2>
+        <p><a href="/login">Выйти</a></p>
+        <% if (success) { %><p style="color:green;"><%= success %></p><% } %>
+        <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
+        <h3>Ваши карты и ссылки:</h3>
+        <% if (cards.length === 0) { %><p>У вас пока нет привязанных карт.</p><% } %>
+        <% cards.forEach(card => { %>
+            <div class="card">
+                <strong>ID Карты: <%= card.id %></strong>
+                <form method="POST" action="/update-card" style="margin-top:10px;">
+                    <input type="hidden" name="cardId" value="<%= card.id %>">
+                    <input type="text" name="targetUrl" value="<%= card.target_url %>" placeholder="Ссылка на Яндекс/2ГИС/Google" required>
+                    <button type="submit">Сохранить</button>
+                </form>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>
